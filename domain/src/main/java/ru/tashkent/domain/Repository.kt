@@ -1,6 +1,6 @@
 package ru.tashkent.domain
 
-interface RemoteRepository {
+interface Repository {
 
     suspend fun searchAlbums(albumName: String): Either<Throwable, List<Album>>
 }

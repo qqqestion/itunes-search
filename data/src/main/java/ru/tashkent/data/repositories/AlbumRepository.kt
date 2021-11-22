@@ -4,12 +4,12 @@ import ru.tashkent.data.api.MusicService
 import ru.tashkent.data.api.Result
 import ru.tashkent.domain.Album
 import ru.tashkent.domain.Either
-import ru.tashkent.domain.RemoteRepository
+import ru.tashkent.domain.Repository
 import java.lang.Exception
 
-class AlbumRemoteRepository internal constructor(
+class AlbumRepository internal constructor(
     private val musicService: MusicService
-) : RemoteRepository {
+) : Repository {
 
     override suspend fun searchAlbums(albumName: String): Either<Throwable, List<Album>> {
         val albums = musicService.searchAlbums(albumName)

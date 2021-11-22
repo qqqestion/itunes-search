@@ -4,5 +4,8 @@ class GetAlbums(
     private val repository: Repository
 ) {
 
-    operator fun invoke(params: Params) = repository.getAlubms(params.albumeName)
+    suspend operator fun invoke(params: Params): Either<Throwable, List<Album>> =
+        repository.searchAlbums(params.albumName)
+
+    data class Params(val albumName: String)
 }
