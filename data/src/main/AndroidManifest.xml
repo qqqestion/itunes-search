@@ -3,4 +3,5 @@
     package="ru.tashkent.data"
     >
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 </manifest>

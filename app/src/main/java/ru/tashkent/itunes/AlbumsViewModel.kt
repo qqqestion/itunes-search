@@ -1,29 +1,38 @@
 package ru.tashkent.itunes
 
-import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.tashkent.data.di.Module
+import ru.tashkent.domain.Album
 import ru.tashkent.domain.GetAlbums
+import ru.tashkent.domain.getErrorOrDefault
+import ru.tashkent.domain.getValueOrDefault
 
-class AlbumsViewModel : ViewModel() {
+class AlbumsViewModel(
+    private val getAlbums: GetAlbums
+) : ViewModel() {
 
-    private val getAlbums =
-        GetAlbums(Module.repository)
+    data class UiState(
+        val albums: List<Album> = emptyList(),
+        val error: Throwable? = null,
+        val isLoading: Boolean = false
+    )
 
-    init {
+    private val stateData = MutableLiveData<UiState>()
+    val state: LiveData<UiState> = stateData
+
+    fun searchAlbums(albumName: String) {
+        stateData.value = UiState(isLoading = true)
         viewModelScope.launch {
-            Log.d("!!!", "Init")
-            load()
-        }
-    }
-
-    fun load() {
-        viewModelScope.launch {
-            Log.d("!!!", "Launching")
-            val albums = getAlbums.invoke(GetAlbums.Params("Escape plan"))
-            Log.d("!!!", "Albums: $albums")
+            val albums = getAlbums.invoke(GetAlbums.Params(albumName))
+            stateData.value = UiState(
+                albums = albums.getValueOrDefault(emptyList()),
+                error = albums.getErrorOrDefault(null),
+                isLoading = false
+            )
         }
     }
 }

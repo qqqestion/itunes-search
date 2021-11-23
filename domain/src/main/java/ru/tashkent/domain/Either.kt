@@ -31,4 +31,14 @@ inline fun <B> runEither(body: () -> B): Either<Throwable, B> = try {
     Either.Left(e)
 }
 
+fun <A, B> Either<A, B>.getValueOrDefault(default: B) = when (this) {
+    is Either.Left -> default
+    is Either.Right -> value
+}
+
+fun <A, B> Either<A, B>.getErrorOrDefault(default: A) = when (this) {
+    is Either.Left -> value
+    is Either.Right -> default
+}
+
 typealias EmptyEither<E> = Either<E, Unit>
